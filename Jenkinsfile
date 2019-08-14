@@ -32,8 +32,8 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'dotnet publish ${TEST_PROJECT_PATH} -o Publish' 
-                sh 'dotnet FirstWebApp/Publish/FirstWebApp.dll'
+                sh 'dotnet publish ${SOLUTION_FILE_PATH} -o Publish' 
+                sh 'dotnet ${DEPLOY_PROJECT_PATH}'
             }
         }
     }
