@@ -1,4 +1,4 @@
-using FirstWebApp.Controllers;
+using FirstWebApp;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Net;
@@ -10,38 +10,44 @@ namespace FirstWebAppTest
     public class UnitTest1
     {
         [Fact]
+        public void TestEntry()
+        {
+            var messageController = new FirstWebApp.Controllers.MessageController();
+            var actualResult = messageController.Get().Value;
+
+            var expectedResult = "Welcome";
+
+            Assert.Equal(expectedResult, actualResult);
+        }
+        [Fact]
         public void TestHello()
         {
-            //using (var client = new WebClient())
-            //{
-            //    var responseString = client.DownloadString("http://localhost:53386/api/message/hello");
-            //    Assert.Equal("Hi", responseString);
-            //}
-            MessageController messageController = new MessageController();
-            ActionResult<string> actionResult = messageController.Get("Hello");
-            Assert.Equal("Hi", actionResult);
+            var messageController = new FirstWebApp.Controllers.MessageController();
+            var actualResult = messageController.Get("Hello").Value;
+
+            var expectedResult = "Hi";
+
+            Assert.Equal(expectedResult, actualResult);
         }
         [Fact]
         public void TestHi()
         {
-            using (var client = new WebClient())
-            {
-                var responseString = client.DownloadString("http://localhost:53386/api/message/hi");
-                Assert.Equal("Hello", responseString);
-            }
-            //MessageController messageController = new MessageController();
-            //var actionResult= messageController.Get();
+            var messageController = new FirstWebApp.Controllers.MessageController();
+            var actualResult = messageController.Get("Hi").Value;
+
+            var expectedResult = "Hello";
+
+            Assert.Equal(expectedResult, actualResult);
         }
         [Fact]
         public void TestNothing()
         {
-            using (var client = new WebClient())
-            {
-                var responseString = client.DownloadString("http://localhost:53386/api/message/");
-                Assert.Equal("Welcome", responseString);
-            }
-            //MessageController messageController = new MessageController();
-            //var actionResult= messageController.Get();
+            var messageController = new FirstWebApp.Controllers.MessageController();
+            var actualResult = messageController.Get("asd").Value;
+
+            var expectedResult = "Invalid Token";
+
+            Assert.Equal(expectedResult, actualResult);
         }
     }
 }

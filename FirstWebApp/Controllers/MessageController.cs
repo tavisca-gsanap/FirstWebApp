@@ -36,28 +36,5 @@ namespace FirstWebApp.Controllers
                 return "Invalid Token";
             }
         }
-
-
-
-        // POST api/values
-        [HttpPost]
-        public ActionResult<JsonResult> Post([FromBody] string value)
-        {
-            JObject jObject = JObject.Parse(value);
-            var message = jObject.GetValue("message");
-            return new JsonResult(message);
-        }
-
-        //// PUT api/values/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
-
-        //// DELETE api/values/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
     }
 }
