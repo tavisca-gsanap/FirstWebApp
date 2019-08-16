@@ -26,5 +26,10 @@ pipeline {
                 sh 'dotnet test ${TEST_PROJECT_PATH}' 
             }
         }
+        stage('Publish') {
+            steps {
+                sh 'dotnet publish ${SOLUTION_FILE_PATH} -o publish' 
+            }
+        }
     }
 }
