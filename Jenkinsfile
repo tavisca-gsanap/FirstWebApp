@@ -48,9 +48,14 @@ pipeline {
 				fi
 			    '''
                 sh 'docker build -t ${DOCKER_IMAGE_NAME} -f Dockerfile .'
-				sh 'docker run --name ${DOCKER_CONTAINER_NAME} -p 57539:57539 ${DOCKER_IMAGE_NAME}:latest'
+				sh 'docker run --name ${DOCKER_CONTAINER_NAME} -d -p 57539:57539 ${DOCKER_IMAGE_NAME}:latest'
                 sh 'docker image rm -f ${DOCKER_IMAGE_NAME}:latest'
 			 }
 		}
+        post{
+            always{
+                deleteDir()
+            }
+        }
     }
 }
