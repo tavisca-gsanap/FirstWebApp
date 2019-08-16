@@ -42,9 +42,9 @@ pipeline {
         stage('Deploy'){
 		     steps{
                 sh '''
-				if(docker inspect -f {{.State.Running}} ${DOCKER_CONTAINER})
+				if(docker inspect -f {{.State.Running}} ${DOCKER_CONTAINER_NAME})
 				then
-					docker container rm -f ${DOCKER_CONTAINER}
+					docker container rm -f ${DOCKER_CONTAINER_NAME}
 				fi
 			    '''
                 sh 'docker build -t ${DOCKER_IMAGE_NAME} -f Dockerfile .'
