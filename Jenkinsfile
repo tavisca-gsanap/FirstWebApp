@@ -52,10 +52,10 @@ pipeline {
                 sh 'docker image rm -f ${DOCKER_IMAGE_NAME}:latest'
 			 }
 		}
+    }
         post{
             always{
                 deleteDir()
             }
         }
-    }
 }
