@@ -37,9 +37,15 @@ pipeline {
         }
         stage('Deploy'){
 		     steps{
-                //sh '''docker rmi $(docker images --format '{{.Repository}}:{{.Tag}}' | grep '${DOCKER_IMAGE_NAME}')'''
-			    sh 'docker build -t ${DOCKER_IMAGE_NAME} -f Dockerfile .'
-				sh 'docker run --rm -p 57539:57539/tcp ${DOCKER_IMAGE_NAME}:latest'
+                sh '''
+				if(docker inspect -f {{.State.Running}} ${DOCKER_CONTAINER})
+				then
+					docker container rm -f ${DOCKER_CONTAINER}
+				fi
+			    '''
+                sh 'docker build -t ${DOCKER_IMAGE_NAME} -f Dockerfile .'
+				sh 'docker run --name ${DOCKER_CONTAINER_NAME} -p 57539:57539 ${DOCKER_IMAGE_NAME}:latest'
+                sh 'docker image rm -f ${DOCKER_IMAGE_NAME}:latest'
 			 }
 		}
     }
