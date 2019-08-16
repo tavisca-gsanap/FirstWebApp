@@ -12,6 +12,10 @@ pipeline {
 			string(	name: 'TEST_PROJECT_PATH',
 					defaultValue: "FirstWebAppTest/FirstWebAppTest.csproj", 
 					description: '')
+
+			string(	name: 'DOCKER_IMAGE_NAME',
+					defaultValue: "webapi3", 
+					description: '')
     }
 	
     stages {
@@ -31,5 +35,12 @@ pipeline {
                 sh 'dotnet publish ${SOLUTION_FILE_PATH} -o publish' 
             }
         }
+        stage('Deploy'){
+		     steps{
+                //sh '''docker rmi $(docker images --format '{{.Repository}}:{{.Tag}}' | grep '${DOCKER_IMAGE_NAME}')'''
+			    sh 'docker build -t ${DOCKER_IMAGE_NAME} -f Dockerfile .'
+				sh 'docker run --rm -p 57539:57539/tcp ${DOCKER_IMAGE_NAME}:latest'
+			 }
+		}
     }
 }
