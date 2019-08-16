@@ -16,6 +16,10 @@ pipeline {
 			string(	name: 'DOCKER_IMAGE_NAME',
 					defaultValue: "webapi3", 
 					description: '')
+
+			string(	name: 'DOCKER_CONTAINER_NAME',
+					defaultValue: "webapi3", 
+					description: '')
     }
 	
     stages {
