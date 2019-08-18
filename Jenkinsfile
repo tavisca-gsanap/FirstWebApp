@@ -1,9 +1,6 @@
 pipeline {
     agent any
 	parameters {	
-            choice(
-                    choices: ['BUILD' , 'TEST' , 'PUBLISH','RUN_ON_DOCKER','DEPLOY_TO_DOCKER'],
-                    name: 'CHOSEN_ACTION')	
 
 			string(	name: 'GIT_SSH_PATH',
 					defaultValue: "https://github.com/tavisca-gsanap/FirstWebApp.git")
@@ -38,28 +35,16 @@ pipeline {
             }
         }
         stage('Test') {
-            when 
-            {
-                expression {params.CHOSEN_ACTION=='TEST' ||  params.CHOSEN_ACTION=='PUBLISH'||  params.CHOSEN_ACTION=='RUN_ON_DOCKER' ||  params.CHOSEN_ACTION=='DEPLOY_TO_DOCKER'}
-            }
             steps {
                 sh 'dotnet test ${TEST_PROJECT_PATH}' 
             }
         }
         stage('Publish') {
-            when 
-            {
-                expression {params.CHOSEN_ACTION=='PUBLISH'||  params.CHOSEN_ACTION=='RUN_ON_DOCKER' ||  params.CHOSEN_ACTION=='DEPLOY_TO_DOCKER'}
-            }
             steps {
                 sh 'dotnet publish ${SOLUTION_FILE_PATH} -o publish' 
             }
         }
         stage('Run'){
-            when 
-            {
-                expression {params.CHOSEN_ACTION=='RUN_ON_DOCKER'}
-            }
 		     steps{
                 sh '''
 				if(docker inspect -f {{.State.Running}} ${DOCKER_CONTAINER_NAME})
@@ -73,10 +58,6 @@ pipeline {
 			 }
 		}
         stage('Deploy'){
-            when 
-            {
-                expression {params.CHOSEN_ACTION=='DEPLOY_TO_DOCKER'}
-            }
             steps{
                 sh 'docker build -t ${DOCKER_IMAGE_NAME} -f Dockerfile .'
                 sh 'docker tag ${DOCKER_IMAGE_NAME} ${DOCKER_USERNAME}/${DOCKER_REPOSITORY}:latest'
