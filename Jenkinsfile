@@ -32,10 +32,6 @@ pipeline {
 	
     stages {
         stage('Build') {
-            when 
-            {
-                expression {params.CHOSEN_ACTION=='BUILD' ||  params.CHOSEN_ACTION=='TEST' ||  params.CHOSEN_ACTION=='PUBLISH'||  params.CHOSEN_ACTION=='RUN_ON_DOCKER' ||  params.CHOSEN_ACTION=='DEPLOY_TO_DOCKER'}
-            }
             steps {
 				sh 'dotnet restore ${SOLUTION_FILE_PATH} --source https://api.nuget.org/v3/index.json'
                 sh 'dotnet build  ${SOLUTION_FILE_PATH} -p:Configuration=release -v:q'
