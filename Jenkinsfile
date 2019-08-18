@@ -28,6 +28,12 @@ pipeline {
 
 			string(name: 'DOCKER_REPOSITORY',
 			       defaultValue: 'webapi_demo')
+
+			string(name: 'API_PORT',
+			       defaultValue: '57539')
+
+		    string(name: 'DOCKER_CONTAINER_PORT',
+			       defaultValue: '57539')
     }
 	
     stages {
@@ -72,7 +78,7 @@ pipeline {
 				fi
 			    '''
                 sh 'docker build -t ${DOCKER_IMAGE_NAME} -f Dockerfile .'
-				sh 'docker run --name ${DOCKER_CONTAINER_NAME} -d -p 57539:57539 ${DOCKER_IMAGE_NAME}:latest'
+				sh 'docker run --name ${DOCKER_CONTAINER_NAME} -d -p ${API_PORT}:${DOCKER_CONTAINER_PORT} ${DOCKER_IMAGE_NAME}:latest'
                 sh 'docker image rm -f ${DOCKER_IMAGE_NAME}:latest'
 			 }
 		}
