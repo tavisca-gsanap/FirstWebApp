@@ -23,9 +23,6 @@ pipeline {
 			string(	name: 'DOCKER_USERNAME',
 					defaultValue: "gsanap")
 
-			string(	name: 'DOCKER_PASSWORD',
-					defaultValue: "password")
-
 			string(name: 'DOCKER_REPOSITORY',
 			       defaultValue: 'webapi_demo')
 
@@ -90,7 +87,9 @@ pipeline {
             steps{
                 sh 'docker build -t ${DOCKER_IMAGE_NAME} -f Dockerfile .'
                 sh 'docker tag ${DOCKER_IMAGE_NAME} ${DOCKER_USERNAME}/${DOCKER_REPOSITORY}:latest'
-				sh 'docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}'
+                withCredentials([string(credentialsId: 'docker_id', variable: 'docker_pwd')]) {
+				sh 'docker login -u ${DOCKER_USERNAME} -p ${docker_pwd}'
+                }
 				sh 'docker push ${DOCKER_USERNAME}/${DOCKER_REPOSITORY}:latest'
                 sh 'docker image rm -f ${DOCKER_IMAGE_NAME}:latest'
             }
