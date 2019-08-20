@@ -31,6 +31,14 @@ pipeline {
 
 		    string(name: 'DOCKER_CONTAINER_PORT',
 			       defaultValue: '57539')
+
+			string(name: 'SONAR_PROJECT_NAME',
+			       defaultValue: 'web-api',
+				   description: 'This field is the associated project name with sonarqube scanner')
+
+			string(name: 'SONARQUBE_HOST',
+			       defaultValue: 'http://localhost:9000',
+				   description: 'This field is the url for sonarqube server')
     }
 	
     stages {
@@ -42,6 +50,11 @@ pipeline {
             steps {
 				sh 'dotnet restore ${SOLUTION_FILE_PATH} --source https://api.nuget.org/v3/index.json'
                 sh 'dotnet build  ${SOLUTION_FILE_PATH} -p:Configuration=release -v:q'
+				bat """
+                        dotnet ${SonarMSBUILD}  begin /key:"%SONAR_PROJECT_NAME%" /d:sonar.host.url="%SONARQUBE_HOST%" /d:sonar.login="${SONARQUBE_CREDENTIALS_ID}"
+                        dotnet build
+						dotnet ${SonarMSBUILD} end  /d:sonar.login="${SONARQUBE_CREDENTIALS_ID}"
+                    """
             }
         }
         stage('Test') {
